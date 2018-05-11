@@ -1,0 +1,1 @@
+This sort-of simulator is aimed at testing different bots for playing No Thanks. It does enforce the rules such as inability to pay tokens you do not have. It has the ability to run one-off match or repeated number of matches with complete statistics
