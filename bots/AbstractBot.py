@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+
 class AbstractBot(object):
     def __init__(self):
         self.identifier = "abstract"

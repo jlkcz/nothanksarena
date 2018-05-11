@@ -3,6 +3,7 @@
 import random
 from . import AbstractBot
 
+
 class DummyBot(AbstractBot.AbstractBot):
     """Dummy bot"""
     def __init__(self):

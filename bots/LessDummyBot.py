@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 import random
-from . import AbstractBot 
+from . import AbstractBot
+
 
 class LessDummyBot(AbstractBot.AbstractBot):
     """Dummy bot"""
@@ -11,6 +12,6 @@ class LessDummyBot(AbstractBot.AbstractBot):
 
     def __repr__(self):
         return "LessDummyBot v1.0"
-    
+
     def decide(self, card, tokens):
         return random.random() < 0.125
