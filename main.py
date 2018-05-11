@@ -61,14 +61,13 @@ class GameState(object):
     def __init__(self, *args):
         """ args are playing bots"""
         self.deck = []
-        self.played_cards = []
         self.players_data = []
         self.card_in_play = None
         self.tokens_in_play = 0
         self.on_turn = 0
 
-        self.playersAI = list(args)
-        random.shuffle(self.playersAI)  # we want randomized order
+        self.players_ai = list(args)
+        random.shuffle(self.players_ai)  # we want randomized order
 
         self.num_players = len(args)
         if self.num_players < 2:
@@ -91,7 +90,7 @@ class GameState(object):
         self.players_data[self.on_turn].add_tokens(self.tokens_in_play)
 
     def notify_new_card(self):
-        for player in self.playersAI:
+        for player in self.players_ai:
             player.notify_new_card(self.card_in_play)
 
     def run_game_loop(self):
@@ -116,14 +115,12 @@ class GameState(object):
 
             # Lets play this round
             while True:
-                if self.playersAI[self.on_turn].decide(self.card_in_play, self.tokens_in_play):
+                if self.players_ai[self.on_turn].decide(self.card_in_play, self.tokens_in_play):
                     self.take_card()
                     break  # someone took the card, the round ends
                 else:
                     self.no_thanks()
 
-            # clean up after round
-            self.played_cards.append(self.card_in_play)
         # Game is finished, count scores
         for player in self.players_data:
             player.count_score()
@@ -132,15 +129,15 @@ class GameState(object):
         scores = {player.score: ordnum for ordnum, player in enumerate(self.players_data)}
         for order, score in enumerate(sorted(scores)):
             num = scores[score]
-            print("#{} place; {} points: {}#{}".format(order+1, score, self.playersAI[num], num))
+            print("#{} place; {} points: {}#{}".format(order+1, score, self.players_ai[num], num))
 
     def get_programmatic_results(self):
         scores = {player.score: ordnum for ordnum, player in enumerate(self.players_data)}
-        results = []
+        data = []
         for order, score in enumerate(sorted(scores)):
             num = scores[score]
-            results.append({"ai": self.playersAI[num].identifier, "score": score, "position": order+1})
-        return results
+            data.append({"ai": self.players_ai[num].identifier, "score": score, "position": order+1})
+        return data
 
 
 if __name__ == '__main__x':
