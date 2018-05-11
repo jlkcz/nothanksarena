@@ -2,7 +2,7 @@
 
 import sys
 import random
-from operator import itemgetter
+import bots
 
 DEBUG = 0
 def debug(msg):
@@ -11,78 +11,6 @@ def debug(msg):
 
 class CheatingException(Exception):
     """ Exception raised if some player tries to say No Thanks without tokens"""
-
-class AbstractBot(object):
-    def __init__(self):
-        self.identifier = "abstract"
-
-    def notify_new_card(self, cardno):
-        pass
-
-    def decide(self, card, tokens):
-        return True
-
-class DummyBot(AbstractBot):
-    """Dummy bot"""
-    def __init__(self):
-        self.identifier = "dummy"
-
-    def __repr__(self):
-        return "DummyBot v1.0"
-
-    def decide(self, card, tokens):
-        return random.random() < 0.5
-
-class LessDummyBot(AbstractBot):
-    """Dummy bot"""
-    def __init__(self):
-        self.tokens = 11
-        self.identifier = "lessdummy"
-
-    def __repr__(self):
-        return "LessDummyBot v1.0"
-    
-    def decide(self, card, tokens):
-        return random.random() < 0.125
-
-
-class TrackingBot(object):
-    """Dummy bot"""
-    def __init__(self):
-        self.identifier = "tracking"
-        self.tokens = 11
-        self.cards = []
-        self.played_cards = []
-
-
-    def __repr__(self):
-        return "TrackingBot v1.0"
-
-    def notify_new_card(self, cardno):
-        self.played_cards.append(cardno)
-
-    def decide(self, card, tokens):
-        if self.tokens == 0: #No tokens, we accept whatever comes
-            decision = True
-        elif tokens == 0: #No tokens? Let someone else get it...
-            decision = False
-        elif (card+1) in self.cards and tokens > 0: #this is a free card
-            decision = True
-        elif tokens > card/2: #this is a nice offer
-            decision = True
-        else:
-            decision = random.random() < 0.25
-
-        if decision:
-            self.cards.append(card)
-            self.tokens += tokens
-            debug("Decided to take the card #{} with {} tokens. Now I have {} tokens and cards: {}".format(card, tokens, self.tokens, self.cards))
-        else:
-            self.tokens -= 1
-            debug("No thanks to card #{} with {} tokens. I have {} tokens and cards: {}".format(card, tokens, self.tokens, self.cards))
-            
-        return decision
-
 
 class PlayerState(object):
     """ Holds data for players so they can't cheat"""
@@ -214,7 +142,7 @@ class GameState(object):
         
 
 if __name__ == '__main__x':
-    game = GameState(LessDummyBot(),TrackingBot())
+    game = GameState(bots.LessDummyBot(),bots.TrackingBot())
     game.run_game_loop()
     game.print_results()
     sys.exit(0)
@@ -229,7 +157,7 @@ if __name__ == '__main__':
     bots_of_type = 1
     for i in range(rounds+1):
         #Here define bots competing
-        game = GameState(LessDummyBot(),TrackingBot())
+        game = GameState(bots.LessDummyBot(),bots.TrackingBot())
         try:
             game.run_game_loop()
         except CheatingException:
